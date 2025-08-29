@@ -1,0 +1,32 @@
+<div class="container mt-5" style="max-width: 400px;">
+  <h2 class="mb-4">Register</h2>
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+
+  <form (ngSubmit)="register()">
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input class="form-control" [(ngModel)]="user.fullName" name="fullName" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input class="form-control" [(ngModel)]="user.username" name="username" required />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input class="form-control" [(ngModel)]="user.email" name="email" type="email" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input class="form-control" [(ngModel)]="user.password" name="password" type="password" required />
+    </div>
+
+    <button class="btn btn-primary w-100" type="submit">Register</button>
+    <a class="d-flex justify-content-center mt-3" routerLink="/login">Login</a>
+  </form>
+</div>

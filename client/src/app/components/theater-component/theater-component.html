@@ -1,0 +1,46 @@
+<app-selector-component></app-selector-component>
+
+<div class="theater-container p-4">
+  <h2 class="mb-2">{{ theater?.name }}</h2>
+  <p class="text-muted mb-4">{{ theater?.address }}</p>
+
+  @for (item of moviesWithSchedules; track item.movie.id) {
+    <div class="movie-row border-bottom pb-4 mb-4">
+
+      <div class="d-flex flex-wrap align-items-start gap-3">
+        @if (item.movie.poster) {
+          <img
+            [src]="item.movie.poster"
+            alt="{{ item.movie.title }}"
+            class="img-fluid rounded shadow"
+            style="width: 150px; height: 225px; object-fit: cover;"
+          />
+        }
+
+        <div class="flex-grow-1">
+          <h5>{{ item.movie.title }} ({{ item.movie.year }})</h5>
+          <p class="text-muted mb-1">{{ item.movie.genre }}</p>
+          <p class="mb-1">{{ item.movie.plot }}</p>
+          <p class="text-muted mb-2">Directed by: {{ item.movie.director }}</p>
+
+          <div>
+            <h6>Schedules</h6>
+            <div class="d-flex flex-wrap gap-2">
+              @for (schedule of item.schedules; track schedule.id) {
+                <span
+                  class="badge bg-transparent border text-black fs-6 p-3 cursor-pointer text-center"
+                  style="min-width: 90px; cursor: pointer;"
+                  (click)="goToSeatSelection(schedule.id)"
+                >
+                  <div class="mb-3">{{ schedule.startTime | date:'EEE, MMM d' }}</div>
+                  <div class="fw-bold">{{ schedule.startTime | date:'h:mm a' }}</div>
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+</div>

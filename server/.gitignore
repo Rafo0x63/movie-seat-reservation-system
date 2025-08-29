@@ -55,10 +55,11 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
-.env.*.local
+#.env
 
 # next.js build output
 .next
+
+/generated/prisma
 
 /generated/prisma

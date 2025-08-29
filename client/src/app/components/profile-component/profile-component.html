@@ -1,0 +1,67 @@
+<div class="container p-4">
+  <h2>My Profile</h2>
+
+  @if (user) {
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">{{ user.fullName }}</h5>
+        <p class="card-text"><strong>Username:</strong> {{ user.username }}</p>
+        <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+      </div>
+    </div>
+  }
+
+  <h3>Purchase History</h3>
+
+  @if (loading) {
+    <div class="text-center py-4">Loading...</div>
+  } @else {
+    @if (receipts.length === 0) {
+      <div class="text-muted">No purchases yet.</div>
+    } @else {
+      <div class="list-group">
+        @for (receipt of receipts; track receipt.id) {
+          <div class="list-group-item mb-3">
+            <div class="mb-2">
+              <strong>Receipt ID:</strong> {{ receipt.id }}
+            </div>
+            <div class="mb-2">
+              <strong>Payment Method:</strong> {{ receipt.paymentMethod }}
+            </div>
+            <div class="mb-2">
+              <strong>Total Price:</strong> ${{ receipt.totalPrice }}
+            </div>
+            <div class="mb-2">
+              <strong>Purchased At:</strong> {{ receipt.paidAt | date:'medium' }}
+            </div>
+
+            <div class="mt-3">
+              <strong>Tickets:</strong>
+              <ul class="list-group list-group-flush">
+                @for (ticket of receipt.tickets; track ticket.id) {
+                  <li class="list-group-item">
+                    <div>
+                      <strong>Movie:</strong> {{ ticket.seatReservation.schedule.movie.title }}
+                    </div>
+                    <div>
+                      <strong>Theater:</strong> {{ ticket.seatReservation.schedule.theater.name }}
+                    </div>
+                    <div>
+                      <strong>Schedule:</strong> {{ ticket.seatReservation.schedule.startTime | date:'EEE, MMM d, h:mm a' }}
+                    </div>
+                    <div>
+                      <strong>Seat:</strong> {{ ticket.seatReservation.seat.rowLetter }}{{ ticket.seatReservation.seat.seatNumber }}
+                    </div>
+                    <div>
+                      <strong>Price:</strong> ${{ ticket.price }}
+                    </div>
+                  </li>
+                }
+              </ul>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

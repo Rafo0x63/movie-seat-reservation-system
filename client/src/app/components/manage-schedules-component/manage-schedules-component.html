@@ -1,0 +1,38 @@
+<div class="container p-4">
+  <h2>Manage Schedules</h2>
+
+  <form [formGroup]="scheduleForm" (ngSubmit)="submit()">
+    <div class="mb-3">
+      <label class="form-label">Movie</label>
+      <select class="form-select" formControlName="movieId">
+        <option [value]="null" disabled>Select movie</option>
+        @for (movie of movies; track movie.id) {
+          <option [value]="movie.id">{{ movie.title }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Theater</label>
+      <select class="form-select" formControlName="theaterId">
+        <option [value]="null" disabled>Select theater</option>
+        @for (theater of theaters; track theater.id) {
+          <option [value]="theater.id">{{ theater.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Start Time</label>
+      <input type="datetime-local" class="form-control" formControlName="startTime">
+    </div>
+
+    <button class="btn btn-primary" type="submit" [disabled]="submitting">
+      Create Schedule
+    </button>
+
+    @if (error) {
+      <div class="text-danger mt-2">{{ error }}</div>
+    }
+  </form>
+</div>

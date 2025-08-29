@@ -1,0 +1,46 @@
+<div class="container p-4">
+  <h2 class="mb-3">Select Your Seats</h2>
+  <p class="text-muted mb-4">
+    Schedule: {{ schedule?.movie.title }}
+    ({{ schedule?.startTime | date: 'EEE, MMM d • h:mm a' }})
+  </p>
+
+  <div class="screen mb-4 text-center">
+    <span class="badge bg-secondary px-5 py-1">SCREEN</span>
+  </div>
+
+  <div class="seat-map d-flex flex-column gap-2">
+    @for (row of seatRows; track row.rowLetter) {
+      <div class="d-flex gap-2 justify-content-center align-items-center">
+        <span class="seat-label me-2">{{ row.rowLetter }}</span>
+
+        @for (seat of row.seats; track seat.id) {
+          <button
+            class="btn seat-btn"
+            [ngClass]="{
+              'btn-outline-primary': !isSelected(seat) && !seat.isLocked && !seat.isReserved,
+              'btn-success': isSelected(seat),
+              'btn-secondary': seat.isReserved,
+              'btn-warning': seat.isLocked && seat.lockedBy !== currentUserId
+            }"
+            [disabled]="seat.isReserved || (seat.isLocked && seat.lockedBy !== currentUserId)"
+            (click)="toggleSeat(seat)"
+          >
+            {{ seat.seatNumber }}
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mt-4">
+    <h5>Selected Seats: {{ selectedSeatsText }}</h5>
+    <button
+      class="btn btn-success mt-2"
+      [disabled]="!selectedSeats.length"
+      (click)="confirmSeats()"
+    >
+      Confirm Seats
+    </button>
+  </div>
+</div>

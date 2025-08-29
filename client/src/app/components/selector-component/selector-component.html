@@ -1,0 +1,44 @@
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 rounded-4">
+
+      <div class="mb-3">
+        <label for="theater" class="form-label fw-bold">Select Theater</label>
+        <select
+          id="theater"
+          class="form-select"
+          [(ngModel)]="selectedTheater"
+          name="theater"
+          (ngModelChange)="onTheaterChange($event)"
+          required
+        >
+          <option value="" disabled selected>-- Choose a theater --</option>
+          @for (theater of theaters; track theater.id) {
+          <option [ngValue]="theater">
+            {{ theater.name }}
+          </option>
+          }
+        </select>
+      </div>
+
+    <!--
+      <div class="mb-3">
+        <label for="movie" class="form-label fw-bold">Select Movie</label>
+        <select
+          id="movie"
+          class="form-select"
+          [(ngModel)]="selectedMovie"
+          name="movie"
+          (ngModelChange)="onMovieChange($event)"
+          required
+        >
+          <option value="" disabled selected>-- Choose a movie --</option>
+          @for (movie of movies; track movie.id) {
+          <option [ngValue]="movie">
+            {{ movie.title }}
+          </option>
+          }
+        </select>
+      </div>
+      -->
+  </div>
+</div>

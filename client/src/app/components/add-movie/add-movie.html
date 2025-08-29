@@ -1,0 +1,114 @@
+<div class="container d-flex justify-content-center mt-4">
+  <p class="text-center" style="max-width: 600px;">
+    Use the search below to find any movie by name. Click on a movie to see details and add it to the database so it can be scheduled in your theaters.
+  </p>
+</div>
+
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card shadow-sm" style="max-width: 600px; width: 100%;">
+    <div class="card-body">
+      <h5 class="card-title text-center mb-3">Search Movies</h5>
+
+      <form (ngSubmit)="searchMovies()" class="d-flex mb-3">
+        <input
+          type="text"
+          class="form-control me-2"
+          placeholder="Search movies by title"
+          [(ngModel)]="searchTitle"
+          name="searchTitle"
+          required
+        />
+        <button class="btn btn-primary" type="submit">
+          Search
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+@if (movies.length > 0) {
+  <div class="container mt-4" style="max-width: 1400px;">
+    <div class="row">
+      @for (movie of movies; track $index) {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 d-flex flex-column align-items-center" style="cursor: pointer;" (click)="showDetails($index)">
+            <img
+              [src]="movie.poster !== 'N/A' ? movie.poster : '/assets/no-P.png'"
+              class="card-img-top"
+              alt="Movie Poster"
+              style="max-width: 400px;"
+              (error)="removeMovie(movie.imdbId)"
+            />
+            <div class="card-body text-center">
+              <h6 class="card-title">{{ movie.title }}</h6>
+              <p class="card-text text-muted">{{ movie.year }}</p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (selectedMovie) {
+  <div
+    class="modal-backdrop"
+    style="
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1050;
+    "
+    (click)="closeModal()"
+  >
+    <div
+      class="modal-content p-4 bg-white rounded d-flex flex-row"
+      style="max-width: 80%; width: fit-content; position: relative; gap: 2rem;"
+      (click)="$event.stopPropagation()"
+    >
+      <img
+        [src]="selectedMovie.poster !== 'N/A' ? selectedMovie.poster : '/assets/no-P.png'"
+        alt="Poster"
+        style="max-width: 300px; max-height: 400px; object-fit: cover; flex-shrink: 0;"
+      />
+      <div>
+        <h3>{{ selectedMovie.title }}</h3>
+        <p><strong>Year:</strong> {{ selectedMovie.year }}</p>
+        <p><strong>Rated:</strong> {{ selectedMovie.rated }}</p>
+        <p><strong>Released:</strong> {{ selectedMovie.released }}</p>
+        <p><strong>Runtime:</strong> {{ selectedMovie.runtime }}</p>
+        <p><strong>Genre:</strong> {{ selectedMovie.genre }}</p>
+        <p><strong>Director:</strong> {{ selectedMovie.director }}</p>
+        <p><strong>Actors:</strong> {{ selectedMovie.actors }}</p>
+        <p><strong>Plot:</strong> {{ selectedMovie.plot }}</p>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button class="btn btn-primary" (click)="addMovie()">Add</button>
+          <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+@if (loading) {
+  <div
+    class="loading-overlay"
+    style="
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    "
+  >
+    <div class="spinner-border text-primary" role="status" aria-label="Loading...">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+}
