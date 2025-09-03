@@ -9,6 +9,7 @@ import { PrismaClient } from './generated/prisma/client.js';
 import authRouter from "./routes/auth.routes.js";
 import storeRouter from "./routes/store.routes.js";
 import cron from 'node-cron';
+import userRouter from "./routes/user.routes.js";
 
 const prisma = new PrismaClient();
 
@@ -25,7 +26,8 @@ app.use('/api/theaters', theaterRouter);
 app.use('/api/schedules', scheduleRouter);
 app.use('/api/seats', seatRouter);
 app.use('/api/auth', authRouter);
-app.use('/api/store', storeRouter)
+app.use('/api/store', storeRouter);
+app.use('/api/users', userRouter)
 
 app.listen(PORT, () => {
     console.log(`Movie seat reservation API running on  http://localhost:${PORT}`);

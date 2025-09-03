@@ -1,1 +1,55 @@
-<p>manage-users-component works!</p>
+<div class="container">
+  <h2>Manage Users</h2>
+
+  @if (loading) {
+    <div>Loading users...</div>
+  } @else if (users.length === 0) {
+    <div>No users found.</div>
+  } @else {
+    <table class="table">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (user of users; track user.id) {
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.id)">Delete</button>
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5">No users available.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  <hr>
+
+  <h3>Add New Admin</h3>
+  <form [formGroup]="adminForm" (ngSubmit)="addAdmin()">
+    <div class="mb-2">
+      <input formControlName="fullName" placeholder="Name" class="form-control">
+    </div>
+    <div class="mb-2">
+      <input formControlName="username" placeholder="Username" class="form-control">
+    </div>
+    <div class="mb-2">
+      <input formControlName="email" placeholder="Email" class="form-control">
+    </div>
+    <div class="mb-2">
+      <input formControlName="password" placeholder="Password" type="password" class="form-control">
+    </div>
+    <button class="btn btn-primary" type="submit" [disabled]="adminForm.invalid">Add Admin</button>
+  </form>
+</div>

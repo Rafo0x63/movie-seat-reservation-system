@@ -218,7 +218,7 @@ async function main() {
 
         for (const movie of selectedMovies) {
             for (let i = 0; i < 3; i++) {
-                const startHour = 10 + i * 3;
+                const startHour = 15 + i * 3;
                 const startTime = new Date();
                 startTime.setHours(startHour, 0, 0, 0);
 
