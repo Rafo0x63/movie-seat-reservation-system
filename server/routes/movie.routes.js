@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { OMDB_API_KEY } from "../config/env.js";
 import axios from 'axios';
 import { PrismaClient } from '../generated/prisma/client.js';
+import {isAdmin} from "../middleware/isAdmin.middleware.js";
+import {authenticateToken} from "../middleware/auth.middleware.js";
 
 const moviesRouter = Router();
 const prisma = new PrismaClient();
@@ -11,7 +13,19 @@ moviesRouter.get('/', async (req, res) => {
     const movies = await prisma.movie.findMany();
     res.json(movies);
 });
-moviesRouter.get('/search', async (req, res) => {
+moviesRouter.delete('/:id', async (req, res) => {
+    const id = Number(req.params.id);
+    try {
+        await prisma.movie.delete({
+            where: { id }
+        });
+        res.status(200).json({ message: 'Movie deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Failed to delete movie' });
+    }
+});
+moviesRouter.get('/search',  authenticateToken, isAdmin, async (req, res) => {
     const title = req.query.title;
 
     if (!title) {
@@ -45,7 +59,7 @@ moviesRouter.get('/search', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch movies' });
     }
 });
-moviesRouter.get('/search/:id', async (req, res) => {
+moviesRouter.get('/search/:id', authenticateToken, isAdmin, async (req, res) => {
     const id = req.params.id;
 
     if (!id) {
@@ -84,10 +98,7 @@ moviesRouter.get('/search/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch movie' });
     }
 });
-moviesRouter.get('/:id', (req, res) => {
-    res.send("GET movie by id");
-});
-moviesRouter.post('/', async (req, res) => {
+moviesRouter.post('/', authenticateToken, isAdmin, async (req, res) => {
     try {
         const {
             imdbId,
@@ -133,12 +144,6 @@ moviesRouter.post('/', async (req, res) => {
         console.log(error);
         res.status(500).json({ message: 'Failed to add movie' });
     }
-});
-moviesRouter.delete('/:id', (req, res) => {
-    res.send("DELETE movie by id");
-});
-moviesRouter.put('/:id', (req, res) => {
-    res.send("UPDATE movie by id");
 });
 
 export default moviesRouter;

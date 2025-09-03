@@ -6,7 +6,7 @@ import {Seat} from '../models/seat.model';
   providedIn: 'root'
 })
 export class SeatService {
-  private apiUrl = 'http://localhost:6500/seats';
+  private apiUrl = 'http://localhost:6500/api/seats';
 
   constructor(private http: HttpClient) {}
 

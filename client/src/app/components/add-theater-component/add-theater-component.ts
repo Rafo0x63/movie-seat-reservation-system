@@ -25,8 +25,8 @@ export class AddTheaterComponent {
       name: ['', Validators.required],
       address: ['', Validators.required],
       slug: ['', Validators.required],
-      rows: [5, [Validators.required, Validators.min(1)]],
-      seatsPerRow: [10, [Validators.required, Validators.min(1)]],
+      rows: [5, [Validators.required, Validators.min(1), Validators.max(10)]],
+      seatsPerRow: [10, [Validators.required, Validators.min(1), Validators.max(15)]],
     });
   }
 

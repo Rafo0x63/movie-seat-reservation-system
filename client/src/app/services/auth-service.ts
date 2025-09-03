@@ -7,7 +7,7 @@ import {Observable, tap} from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:6500/auth';
+  private apiUrl = 'http://localhost:6500/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -20,6 +20,7 @@ export class AuthService {
       tap((res: any) => {
         localStorage.setItem('userId', res.user.id);
         localStorage.setItem('username', res.user.username);
+        localStorage.setItem('role', res.user.role);
         localStorage.setItem('token', res.token);
       })
     );
@@ -29,6 +30,7 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('username');
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
   }
 
   getToken(): string | null {
@@ -43,7 +45,11 @@ export class AuthService {
     return localStorage.getItem('username');
   }
 
-  getUserInfo() {
+  getRole() {
+    return localStorage.getItem('role');
+  }
+
+  getUserInfo(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${localStorage.getItem('userId')}`);
   }
 

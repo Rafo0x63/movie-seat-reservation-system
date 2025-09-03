@@ -244,6 +244,28 @@ async function main() {
     }
 
     console.log('Schedules and seat reservations seeded!');
+
+    const users = [
+        {
+            fullName: 'admin',
+            username: 'admin',
+            email: 'admin@admin.com',
+            password: '$2a$10$3PlOEKb9ay4W.Q.dLt4Tc.FSQ145VDOZLuoWVZ7zrsadw08lLDzQq',
+            role: 'admin'
+        },
+        {
+            fullName: 'marko',
+            username: 'marko',
+            email: 'marko@gmail.com',
+            password: '$2a$10$wvhdQ4nHiz7.U2in6TuGGelThgRP/2rQBkdiapXmBB9QlOAkc3oZG',
+        }
+    ]
+
+    for (const user of users) {
+        await prisma.user.create({ data: user });
+    }
+
+    console.log('Users seeded successfully!');
 }
 
 main()

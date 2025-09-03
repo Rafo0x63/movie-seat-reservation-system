@@ -3,28 +3,61 @@
 
   <form [formGroup]="theaterForm" (ngSubmit)="submit()">
     <div class="mb-3">
-      <label class="form-label">Name</label>
-      <input type="text" class="form-control" formControlName="name">
+      <label class="form-label" for="name">Name</label>
+      <input id="name" type="text" class="form-control" formControlName="name">
+      @if (theaterForm.get('name')!.hasError('required') && theaterForm.get('name')?.touched) {
+        <div class="text-danger mt-1">Name is required</div>
+      }
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Address</label>
-      <input type="text" class="form-control" formControlName="address">
+      <label class="form-label" for="address">Address</label>
+      <input id="address" type="text" class="form-control" formControlName="address">
+      @if (theaterForm.get('address')!.hasError('required') && theaterForm.get('address')?.touched) {
+        <div class="text-danger mt-1">Address is required</div>
+      }
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Slug</label>
-      <input type="text" class="form-control" placeholder="e.g. Grand Cinema => grand-cinema, Downtown Cineplex => downtown-cineplex" formControlName="slug">
+      <label class="form-label" for="slug">Slug</label>
+      <input
+        id="slug"
+        type="text"
+        class="form-control"
+        placeholder="e.g. Grand Cinema => grand-cinema"
+        formControlName="slug"
+      >
+      @if (theaterForm.get('slug')!.hasError('required') && theaterForm.get('slug')?.touched) {
+        <div class="text-danger mt-1">Slug is required</div>
+      }
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Number of Rows</label>
-      <input type="number" class="form-control" formControlName="rows">
+      <label class="form-label" for="rows">Number of Rows</label>
+      <input id="rows" type="number" class="form-control" formControlName="rows">
+      @if (theaterForm.get('rows')!.hasError('required') && theaterForm.get('rows')?.touched) {
+        <div class="text-danger mt-1">Number of rows is required</div>
+      }
+      @if (theaterForm.get('rows')!.hasError('max')) {
+        <div class="text-danger mt-1">Maximum 10 rows allowed</div>
+      }
+      @if (theaterForm.get('rows')!.hasError('min')) {
+        <div class="text-danger mt-1">Minimum 1 row required</div>
+      }
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Seats Per Row</label>
-      <input type="number" class="form-control" formControlName="seatsPerRow">
+      <label class="form-label" for="seatsPerRow">Seats Per Row</label>
+      <input id="seatsPerRow" type="number" class="form-control" formControlName="seatsPerRow">
+      @if (theaterForm.get('seatsPerRow')!.hasError('required') && theaterForm.get('seatsPerRow')?.touched) {
+        <div class="text-danger mt-1">Seats per row is required</div>
+      }
+      @if (theaterForm.get('seatsPerRow')!.hasError('max')) {
+        <div class="text-danger mt-1">Maximum 15 seats per row allowed</div>
+      }
+      @if (theaterForm.get('seatsPerRow')!.hasError('min')) {
+        <div class="text-danger mt-1">Minimum 1 seat required</div>
+      }
     </div>
 
     <button class="btn btn-primary" type="submit" [disabled]="submitting">

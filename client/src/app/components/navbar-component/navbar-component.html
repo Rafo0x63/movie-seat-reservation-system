@@ -25,9 +25,11 @@
             <a class="nav-link" routerLink="/login">Login</a>
           </li>
         } @else {
-          <li class="nav-item me-3">
-            <a class="nav-link text-white fw-bold" routerLink="/admin-dashboard">Admin</a>
-          </li>
+          @if (isAdmin()) {
+            <li class="nav-item me-3">
+              <a class="nav-link text-white fw-bold" routerLink="/admin-dashboard">Admin</a>
+            </li>
+          }
 
           <li class="nav-item me-2">
             <a class="nav-link" routerLink="/profile" title="My Profile">

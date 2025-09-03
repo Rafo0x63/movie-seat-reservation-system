@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Movie} from '../models/movie.model';
 import {map, Observable} from 'rxjs';
@@ -7,7 +7,7 @@ import {map, Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class MovieService {
-  private apiUrl = 'http://localhost:6500/movies';
+  private apiUrl = 'http://localhost:6500/api/movies';
 
   constructor(private http: HttpClient) {}
 
@@ -25,5 +25,9 @@ export class MovieService {
 
   getAllMovies(): Observable<Movie[]> {
     return this.http.get<any[]>(`${this.apiUrl}`);
+  }
+
+  deleteMovie(movieId: number) {
+    return this.http.delete<any>(`${this.apiUrl}/${movieId}`);
   }
 }

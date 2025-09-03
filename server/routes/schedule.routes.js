@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { PrismaClient } from '../generated/prisma/client.js';
+import {isAdmin} from "../middleware/isAdmin.middleware.js";
+import {authenticateToken} from "../middleware/auth.middleware.js";
 
 const scheduleRouter = Router();
 const prisma = new PrismaClient();
@@ -33,8 +35,7 @@ scheduleRouter.post("/:scheduleId/lock-seat", async (req, res) => {
 
     const now = new Date();
 
-    const lockTimeout = 3 * 60 * 1000;
-    const isLocked = seat.isReserved || (seat.lockedAt && now.getTime() - seat.lockedAt.getTime() < lockTimeout);
+    const isLocked = seat.isReserved || seat.lockedAt;
 
     if (isLocked) {
         return res.status(400).json({ message: 'Seat already reserved or locked' });
@@ -91,7 +92,7 @@ scheduleRouter.post("/:scheduleId/unlock-seat", async (req, res) => {
         res.status(500).json({ message: "Failed to unlock seat" });
     }
 });
-scheduleRouter.post('/', async (req, res) => {
+scheduleRouter.post('/', authenticateToken, isAdmin, async (req, res) => {
     try {
         const { movieId, theaterId, startTime } = req.body;
         if (!movieId || !theaterId || !startTime) {
@@ -123,12 +124,6 @@ scheduleRouter.post('/', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Failed to create schedule' });
     }
-});
-scheduleRouter.put("/:id", (req, res) => {
-    res.send("UPDATE theater by id");
-});
-scheduleRouter.delete("/:id", (req, res) => {
-    res.send("DELETE theater by id");
 });
 
 export default scheduleRouter;

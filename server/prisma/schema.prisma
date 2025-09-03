@@ -9,69 +9,68 @@ datasource db {
 }
 
 model Movie {
-  id         Int       @id @default(autoincrement())
-  imdbId     String    @unique @db.VarChar(20)
-  title      String    @db.VarChar(255)
-  year       String    @db.VarChar(10)
-  rated      String?   @db.VarChar(10)
-  released   DateTime? @db.Date
-  runtime    String?   @db.VarChar(20)
-  genre      String?   @db.VarChar(255)
-  director   String?   @db.VarChar(255)
-  actors     String?   @db.Text
-  plot       String?   @db.Text
-  poster     String?   @db.VarChar(500)
-  createdAt  DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt  DateTime  @default(now()) @db.Timestamp(0)
+  id        Int       @id @default(autoincrement())
+  imdbId    String    @unique @db.VarChar(20)
+  title     String    @db.VarChar(255)
+  year      String    @db.VarChar(10)
+  rated     String?   @db.VarChar(10)
+  released  DateTime? @db.Date
+  runtime   String?   @db.VarChar(20)
+  genre     String?   @db.VarChar(255)
+  director  String?   @db.VarChar(255)
+  actors    String?   @db.Text
+  plot      String?   @db.Text
+  poster    String?   @db.VarChar(500)
+  createdAt DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt DateTime  @default(now()) @db.Timestamp(0)
 
-  schedules  Schedule[]
+  schedules Schedule[]
 }
 
 model Receipt {
-  id             Int       @id @default(autoincrement())
-  userId         Int?
-  totalPrice     Decimal?  @db.Decimal(10,2)
-  paymentMethod  String?   @db.VarChar(50)
-  paidAt         DateTime  @default(now()) @db.Timestamp(0)
-  createdAt      DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt      DateTime  @default(now()) @db.Timestamp(0)
-  user           User?     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "receipts_ibfk_1")
-  tickets        Ticket[]
+  id            Int      @id @default(autoincrement())
+  userId        Int?
+  totalPrice    Decimal? @db.Decimal(10, 2)
+  paymentMethod String?  @db.VarChar(50)
+  paidAt        DateTime @default(now()) @db.Timestamp(0)
+  createdAt     DateTime @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime @default(now()) @db.Timestamp(0)
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "receipts_ibfk_1")
+  tickets       Ticket[]
 
   @@index([userId], map: "user_id")
 }
 
 model Schedule {
-  id               Int                @id @default(autoincrement())
+  id               Int               @id @default(autoincrement())
   movieId          Int?
   theaterId        Int?
   startTime        DateTime?
-  createdAt        DateTime           @default(now()) @db.Timestamp(0)
-  updatedAt        DateTime           @default(now()) @db.Timestamp(0)
-  movie            Movie?             @relation(fields: [movieId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "schedules_ibfk_1")
+  createdAt        DateTime          @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime          @default(now()) @db.Timestamp(0)
+  movie            Movie?            @relation(fields: [movieId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "schedules_ibfk_1")
   seatReservations SeatReservation[]
-  theater          Theater?           @relation(fields: [theaterId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "schedules_ibfk_2")
+  theater          Theater?          @relation(fields: [theaterId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "schedules_ibfk_2")
 
   @@index([movieId], map: "movie_id")
   @@index([theaterId], map: "theater_id")
 }
 
 model SeatReservation {
-  id          Int        @id @default(autoincrement())
-  seatId      Int?
-  scheduleId  Int?
-  isReserved  Boolean?   @default(false)
-  createdAt   DateTime   @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime   @default(now()) @db.Timestamp(0)
-  seat        Seat?      @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_reservations_ibfk_1")
-  schedule    Schedule?  @relation(fields: [scheduleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_reservations_ibfk_2")
-  tickets     Ticket[]
-  lockedAt    DateTime?
-  userId      Int?
+  id         Int       @id @default(autoincrement())
+  seatId     Int?
+  scheduleId Int?
+  isReserved Boolean?  @default(false)
+  createdAt  DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime  @default(now()) @db.Timestamp(0)
+  seat       Seat?     @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_reservations_ibfk_1")
+  schedule   Schedule? @relation(fields: [scheduleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "seat_reservations_ibfk_2")
+  tickets    Ticket[]
+  lockedAt   DateTime?
+  userId     Int?
 
   @@index([scheduleId], map: "schedule_id")
   @@index([seatId], map: "seat_id")
-
   @@map("seat_reservation")
 }
 
@@ -91,7 +90,7 @@ model Seat {
 model Theater {
   id        Int        @id @default(autoincrement())
   name      String?    @db.VarChar(255)
-  slug      String     @db.VarChar(255) @unique
+  slug      String     @unique @db.VarChar(255)
   address   String?    @db.VarChar(255)
   createdAt DateTime   @default(now()) @db.Timestamp(0)
   updatedAt DateTime   @default(now()) @db.Timestamp(0)
@@ -100,16 +99,16 @@ model Theater {
 }
 
 model Ticket {
-  id                 Int              @id @default(autoincrement())
-  userId             Int?
-  seatReservationId  Int?
-  receiptId          Int?
-  price              Decimal?         @db.Decimal(10,2)
-  createdAt          DateTime         @default(now()) @db.Timestamp(0)
-  updatedAt          DateTime         @default(now()) @db.Timestamp(0)
-  user               User?            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tickets_ibfk_1")
-  seatReservation    SeatReservation? @relation(fields: [seatReservationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tickets_ibfk_2")
-  receipt            Receipt?         @relation(fields: [receiptId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tickets_ibfk_3")
+  id                Int              @id @default(autoincrement())
+  userId            Int?
+  seatReservationId Int?
+  receiptId         Int?
+  price             Decimal?         @db.Decimal(10, 2)
+  createdAt         DateTime         @default(now()) @db.Timestamp(0)
+  updatedAt         DateTime         @default(now()) @db.Timestamp(0)
+  user              User?            @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tickets_ibfk_1")
+  seatReservation   SeatReservation? @relation(fields: [seatReservationId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tickets_ibfk_2")
+  receipt           Receipt?         @relation(fields: [receiptId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tickets_ibfk_3")
 
   @@index([receiptId], map: "receipt_id")
   @@index([seatReservationId], map: "seat_reservation_id")
@@ -117,13 +116,14 @@ model Ticket {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  fullName   String?   @db.VarChar(255)
-  username   String?   @db.VarChar(255)
-  email      String?   @db.VarChar(255)
-  password   String?   @db.VarChar(255)
-  createdAt  DateTime  @default(now()) @db.Timestamp(0)
-  updatedAt  DateTime  @default(now()) @db.Timestamp(0)
-  receipts   Receipt[]
-  tickets    Ticket[]
+  id        Int       @id @default(autoincrement())
+  fullName  String?   @db.VarChar(255)
+  username  String?   @db.VarChar(255)
+  email     String?   @db.VarChar(255)
+  password  String?   @db.VarChar(255)
+  role      String    @default("user")
+  createdAt DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt DateTime  @default(now()) @db.Timestamp(0)
+  receipts  Receipt[]
+  tickets   Ticket[]
 }

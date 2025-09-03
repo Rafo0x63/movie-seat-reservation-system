@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ScheduleService {
-  private apiUrl = 'http://localhost:6500/schedules';
+  private apiUrl = 'http://localhost:6500/api/schedules';
 
   constructor(private http: HttpClient) { }
 

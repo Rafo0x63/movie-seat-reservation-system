@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { PrismaClient } from '../generated/prisma/client.js';
+import {isAdmin} from "../middleware/isAdmin.middleware.js";
+import {authenticateToken} from "../middleware/auth.middleware.js";
 
 const theaterRouter = Router();
 const prisma = new PrismaClient();
@@ -24,11 +26,7 @@ theaterRouter.get("/:slug", async (req, res) => {
 
     res.json(theater);
 });
-
-theaterRouter.get("/:id", (req, res) => {
-    res.send("GET theater by id");
-});
-theaterRouter.post('/', async (req, res) => {
+theaterRouter.post('/', authenticateToken, isAdmin, async (req, res) => {
     try {
         const { name, address, slug, rows, seatsPerRow } = req.body;
 
@@ -56,11 +54,19 @@ theaterRouter.post('/', async (req, res) => {
         res.status(500).json({ message: 'Failed to create theater' });
     }
 });
-theaterRouter.put("/:id", (req, res) => {
-    res.send("UPDATE theater by id");
-});
-theaterRouter.delete("/:id", (req, res) => {
-    res.send("DELETE theater by id");
-});
+theaterRouter.delete('/:id', async (req, res) => {
+    const id = Number(req.params.id);
+
+    try {
+        await prisma.theater.delete({
+            where: { id }
+        });
+
+        res.status(200).json({ message: 'Theater was deleted successfully.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to delete theater' });
+    }
+})
 
 export default theaterRouter;

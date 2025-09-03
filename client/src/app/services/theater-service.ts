@@ -7,7 +7,7 @@ import {Theater} from '../models/theater.model';
   providedIn: 'root'
 })
 export class TheaterService {
-  private apiUrl = 'http://localhost:6500/theaters';
+  private apiUrl = 'http://localhost:6500/api/theaters';
 
   constructor(private http: HttpClient) {}
 
@@ -21,5 +21,9 @@ export class TheaterService {
 
   addTheater(data: any) {
     return this.http.post(`${this.apiUrl}`, data);
+  }
+
+  deleteTheater(theaterId: number) {
+    return this.http.delete(`${this.apiUrl}/${theaterId}`);
   }
 }

@@ -16,14 +16,5 @@ seatRouter.get("/theater/:id", async (req, res) => {
     });
     res.json(seats);
 });
-seatRouter.post("/", (req, res) => {
-    res.send("CREATE new theater");
-});
-seatRouter.put("/:id", (req, res) => {
-    res.send("UPDATE theater by id");
-});
-seatRouter.delete("/:id", (req, res) => {
-    res.send("DELETE theater by id");
-});
 
 export default seatRouter;

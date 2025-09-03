@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <h2 class="mb-3">Manage Movies</h2>
+
+  <div class="container mt-4" style="max-width: 1400px;">
+    <div class="row">
+      @for (movie of movies; track movie.id) {
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 d-flex flex-column align-items-center" style="cursor: pointer;">
+            <img
+              [src]="movie.poster !== 'N/A' ? movie.poster : '/assets/no-P.png'"
+              class="card-img-top"
+              alt="Movie Poster"
+              style="max-width: 400px;"
+            />
+            <div class="card-body text-center">
+              <h6 class="card-title">{{ movie.title }}</h6>
+              <p class="card-text text-muted">{{ movie.year }}</p>
+            </div>
+            <div class="card-footer w-100 text-center">
+              <button class="btn btn-sm btn-danger" (click)="deleteMovie(movie)">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+
+
+  @if (movies.length === 0) {
+    <div class="alert alert-info mt-3">
+      No movies available.
+    </div>
+  }
+</div>

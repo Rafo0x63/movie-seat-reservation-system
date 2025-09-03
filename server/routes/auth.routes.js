@@ -10,13 +10,15 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey'
 
 authRouter.post('/register', async (req, res) => {
     const { fullName, email, password, username } = req.body;
-    console.log(req.body)
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await prisma.user.create({
         data: {
             fullName,
             username,
             email,
-            password
+            password: hashedPassword
         }
     });
 
@@ -40,16 +42,14 @@ authRouter.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid username' });
         }
 
-        //const passwordMatches = await bcrypt.compare(password, user.password || '');
-        const passwordMatches = password === user.password;
+        const passwordMatches = await bcrypt.compare(password, user.password || '');
         if (!passwordMatches) {
             return res.status(401).json({ message: 'Invalid password' });
         }
 
-        const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET, {
+        const token = jwt.sign({ userId: user.id, username: user.username, role: user.role }, JWT_SECRET, {
             expiresIn: '1h',
         });
-
         res.json({
             token,
             user: {
@@ -57,6 +57,7 @@ authRouter.post('/login', async (req, res) => {
                 username: user.username,
                 fullName: user.fullName,
                 email: user.email,
+                role: user.role
             },
         });
     } catch (err) {

@@ -1,0 +1,38 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Manage Theaters</h2>
+
+  @if(error) {
+    <div class="alert alert-danger text-center">{{ error }}</div>
+  } @else if(!theaters.length) {
+    <div class="alert alert-info text-center">No theaters found.</div>
+  }
+
+  @if(theaters.length) {
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover align-middle">
+        <thead class="table-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Address</th>
+          <th scope="col" class="text-center">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (theater of theaters; track theater.id) {
+            <tr>
+              <td>{{ theater.name }}</td>
+              <td>{{ theater.address }}</td>
+              <td class="text-center">
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="deleteTheater(theater.id)">
+                  <i class="bi bi-trash"></i> Delete
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
